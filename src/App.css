@@ -1,0 +1,89 @@
+.App {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ width: auto;
+ padding: 1rem;
+ font-size: 1.2rem;
+ background-color: #f5f5f5; 
+ color: #333;
+}
+
+.post {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ text-align: center;
+ gap: 1rem;
+ width: 100%;
+ padding: 1rem; 
+ border-radius: 10px; 
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+ background-color: #fff; 
+}
+
+@media (max-width: 600px) {
+ .App {
+    padding: 0.5rem;
+    font-size: 1rem;
+ }
+
+ .post {
+    gap: 0.5rem;
+ }
+}
+
+
+button {
+ padding: 0.5rem 1rem;
+ border: none;
+ border-radius: 5px;
+ background-color: #007bff;
+ color: #fff;
+ cursor: pointer;
+ transition: background-color 0.3s ease;
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+ margin-top: 0.5rem;
+ margin-left: 0.5rem;
+ margin-right: 0.5rem;
+}
+
+button:hover {
+ background-color: #0056b3;
+}
+
+.like-button {
+ background-color: #ffffff;
+ color: #ffffff;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ font-weight: bold; 
+ transition: background-color 0.3s ease;
+}
+
+.like-button:hover {
+ background-color: #003c80;
+}
+
+.restantes {
+ font-size: 12px;
+ text-decoration: underline;
+}
+
+
+input, textarea {
+ padding: 0.5rem;
+ border: 1px solid #ccc;
+ border-radius: 5px;
+ margin-top: 1rem;
+}
+
+
+img {
+ max-width: 35%;
+ height: auto;
+ border-radius: 5px;
+}
