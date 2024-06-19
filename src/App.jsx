@@ -9,6 +9,8 @@ function App() {
  const [password, setPassword] = useState('');
  const [newComment, setNewComment] = useState('');
 
+//teste commit
+  
  const handleLogin = () => {
     login(username, password);
  };
