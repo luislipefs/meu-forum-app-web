@@ -1,71 +1,231 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, getDocs, addDoc, doc, updateDoc, arrayUnion, arrayRemove, query, where, orderBy } from 'firebase/firestore';
+import { getDoc } from 'firebase/firestore';
+import { db, app } from '../firebaseConfig';
+import { signOut } from 'firebase/auth';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
+const auth = getAuth(app);
 
 export const AuthProvider = ({ children }) => {
- const [isAuthenticated, setIsAuthenticated] = useState(false);
- const [user, setUser] = useState({ username: '' });
- const [likedPosts, setLikedPosts] = useState([]);
- const [comments, setComments] = useState({});
- const [posts, setPosts] = useState([
-      { id: 1, title: 'Leroy Merlin', description: 'Leroy Merlin é uma rede de lojas de materiais de construção, acabamento, decoração, jardinagem e bricolagem, fundada na França em 1923 por Adolphe Leroy e Rose Merlin. Atualmente, é uma empresa pertencente ao grupo francês Adeo.', image: 'https://1.bp.blogspot.com/-27LragsCCxg/YEGBvRtGDpI/AAAAAAAB3A8/IkNTcpAtt8M9ia9CN0zWR_HreFoFkIKxQCLcBGAsYHQ/s420/leroy%2Bslogan.jpg', likes: 0, likedBy: [] },
-      { id: 2, title: 'Clube de Regatas do Flamengo', description: 'O Clube de Regatas do Flamengo é uma agremiação poliesportiva brasileira com sede na cidade do Rio de Janeiro, capital do estado homônimo.', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Flamengo_braz_logo.svg/1200px-Flamengo_braz_logo.svg.png', likes: 0, likedBy: [] },
-     ]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const [likedPosts, setLikedPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
 
- useEffect(() => {
-     const storedLikedPosts = localStorage.getItem('likedPosts');
-     const storedComments = localStorage.getItem('comments');
-     if (storedLikedPosts) {
-       setLikedPosts(JSON.parse(storedLikedPosts));
-     }
-     if (storedComments) {
-       setComments(JSON.parse(storedComments));
-     }
- }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthenticated(true);
+        setUser(user);
+        fetchLikedPosts(user.uid);
+        fetchPosts();
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+        setLikedPosts([]);
+        setPosts([]);
+      }
+    });
 
- useEffect(() => {
-     localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
-     localStorage.setItem('comments', JSON.stringify(comments));
- }, [likedPosts, comments]);
+    return () => unsubscribe();
+  }, []);
 
- const login = (username, password) => {
-     setIsAuthenticated(true);
-     setUser({ username, password });
- };
 
- const logout = () => {
-     setIsAuthenticated(false);
-     setUser({ username: '' });
- };
+  const fetchLikedPosts = async (uid) => {
+    try {
+      const userDocRef = doc(db, 'users', uid);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        setLikedPosts(userDocSnap.data().likedPosts || []);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar posts curtidos:", error);
+    }
+  };
 
- const addComment = (postId, comment) => {
-     if (!isAuthenticated) return;
-     setComments(prevComments => ({
-       ...prevComments,
-       [postId]: [...(prevComments[postId] || []), comment]
-     }));
- };
+  const fetchPosts = async () => {
+    try {
+      const postsCollectionRef = collection(db, 'posts');
+      const querySnapshot = await getDocs(postsCollectionRef);
+      const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setPosts(postsData);
+    } catch (error) {
+      console.error("Erro ao buscar posts:", error);
+    }
+  };
 
- const toggleLike = (postId) => {
-          if (!isAuthenticated) return;
-          const postIndex = posts.findIndex(post => post.id === postId);
-          const post = posts[postIndex];
-          if (post.likedBy.includes(user.username)) {
-             setLikedPosts(likedPosts.filter(id => id !== postId));
-             setPosts(prevPosts => prevPosts.map(p => p.id === postId ? { ...p, likes: p.likes - 1, likedBy: p.likedBy.filter(username => username !== user.username) } : p));
-          } else {
-             setLikedPosts([...likedPosts, postId]);
-             setPosts(prevPosts => prevPosts.map(p => p.id === postId ? { ...p, likes: p.likes + 1, likedBy: [...p.likedBy, user.username] } : p));
-          }
+  const login = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      // Lógica para lidar com o erro (ex: exibir mensagem de erro)
+    }
+  };
+
+  const signup = async (email, password) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      await setDoc(doc(db, 'users', user.uid), {
+        username: email, // Ou obtenha o nome de usuário de outro campo do formulário
+        email,
+        likedPosts: []
+      });
+    } catch (error) {
+      console.error("Erro ao criar conta:", error);
+      // Lógica para lidar com o erro (ex: exibir mensagem de erro)
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
+  };
+
+  const addPost = async (newPost) => {
+    if (!user) return;
+
+    try {
+      const docRef = await addDoc(collection(db, "posts"), {
+        ...newPost,
+        createdAt: serverTimestamp(),
+        likes: 0,
+        likedBy: [],
+        author: user.uid,
+        authorName: user.displayName || user.email,
+      });
+      console.log("Post adicionado com ID: ", docRef.id);
+      fetchPosts(); // Atualiza a lista de posts após adicionar um novo
+    } catch (e) {
+      console.error("Erro ao adicionar post: ", e);
+    }
+  };
+
+  const toggleLike = async (postId) => {
+    if (!user) return; // Garante que o usuário está logado antes de curtir/descurtir
+
+    try {
+      const postRef = doc(db, 'posts', postId);
+      const postSnap = await getDoc(postRef);
+
+      if (postSnap.exists()) {
+        const postData = postSnap.data();
+        const usuarioCurtiu = postData.likedBy.includes(user.uid);
+
+        if (usuarioCurtiu) {
+          await updateDoc(postRef, {
+            likes: postData.likes - 1,
+            likedBy: arrayRemove(user.uid)
+          });
+          setLikedPosts(likedPosts.filter(id => id !== postId));
+        } else {
+          await updateDoc(postRef, {
+            likes: postData.likes + 1,
+            likedBy: arrayUnion(user.uid)
+          });
+          setLikedPosts([...likedPosts, postId]);
+        }
+
+        // Atualiza o estado local dos posts (opcional, para atualizar a interface imediatamente)
+        fetchPosts(); // Atualiza a lista de posts após curtir/descurtir
+      }
+    } catch (error) {
+      console.error("Erro ao curtir/descurtir post:", error);
+    }
+  };
+
+  const addComment = async (postId, commentText) => {
+    if (!isAuthenticated || !user) return; // Verifica se o usuário está autenticado
+
+    try {
+      const commentId = Date.now().toString(); // Gera um ID único para o comentário
+      const commentData = {
+        id: commentId,
+        postId,
+        content: commentText,
+        author: user.uid, // Usa o UID do usuário como autor
+        createdAt: new Date(),
+        likes: 0,
+        likedBy: []
       };
 
- return (
-     <AuthContext.Provider value={{ isAuthenticated, user, likedPosts, login, logout, toggleLike, addComment, comments, posts, setPosts }}>
-       {children}
-     </AuthContext.Provider>
- );
+      // Adiciona o comentário ao Firestore
+      await addDoc(collection(db, "comments"), commentData);
+
+      // Atualiza o array de comentários do post no Firestore
+      const postRef = doc(db, 'posts', postId);
+      await updateDoc(postRef, {
+        comments: arrayUnion(commentId)
+      });
+
+      // Atualiza o estado local dos posts (opcional, para atualizar a interface imediatamente)
+      fetchPosts();
+    } catch (error) {
+      console.error("Erro ao adicionar comentário:", error);
+      // Lida com o erro (ex: exibe uma mensagem de erro para o usuário)
+    }
+  };
+
+  const addResposta = async (postId, commentId, respostaText) => {
+    if (!isAuthenticated || !user) return; // Verifica se o usuário está autenticado
+
+    try {
+      const respostaId = Date.now().toString(); // Gera um ID único para a resposta
+      const respostaData = {
+        id: respostaId,
+        postId,
+        commentId, // ID do comentário pai
+        content: respostaText,
+        author: user.uid, // Usa o UID do usuário como autor
+        createdAt: new Date(),
+        likes: 0,
+        likedBy: []
+      };
+
+      // Adiciona a resposta ao Firestore
+      await addDoc(collection(db, "respostas"), respostaData);
+
+      // Atualiza o array de respostas do comentário no Firestore (se necessário)
+      // ... (lógica para atualizar o array de respostas no comentário)
+
+      // Atualiza o estado local dos posts (opcional, para atualizar a interface imediatamente)
+      fetchPosts();
+    } catch (error) {
+      console.error("Erro ao adicionar resposta:", error);
+      // Lida com o erro (ex: exibe uma mensagem de erro para o usuário)
+    }
+  };
+
+return (
+  <AuthContext.Provider
+    value={{
+      isAuthenticated,
+      user,
+      likedPosts,
+      login,
+      signup,
+      logout,
+      toggleLike,
+      addComment,
+      addResposta,
+      posts,
+      setPosts,
+      addPost
+    }}
+  >
+    {children}
+  </AuthContext.Provider>
+);
 };
 
 export const useAuth = () => {
- return useContext(AuthContext);
+  return useContext(AuthContext);
 };
+
+export default AuthContext;

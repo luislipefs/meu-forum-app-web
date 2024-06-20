@@ -1,89 +1,205 @@
-.App {
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- width: auto;
- padding: 1rem;
- font-size: 1.2rem;
- background-color: #f5f5f5; 
- color: #333;
+/* Estilos gerais para o corpo da aplicação */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
 }
 
-.post {
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- text-align: center;
- gap: 1rem;
- width: 100%;
- padding: 1rem; 
- border-radius: 10px; 
- box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
- background-color: #fff; 
+/* Estilos para o cabeçalho */
+.cabecalho {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
 }
 
-@media (max-width: 600px) {
- .App {
-    padding: 0.5rem;
-    font-size: 1rem;
- }
-
- .post {
-    gap: 0.5rem;
- }
+.cabecalho nav {
+  display: flex;
+  justify-content: space-around; 
 }
 
-
-button {
- padding: 0.5rem 1rem;
- border: none;
- border-radius: 5px;
- background-color: #007bff;
- color: #fff;
- cursor: pointer;
- transition: background-color 0.3s ease;
- box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
- margin-top: 0.5rem;
- margin-left: 0.5rem;
- margin-right: 0.5rem;
+.cabecalho nav button { /* Estiliza o botão dentro do nav do cabeçalho */
+  background-color: #dc3545; /* Cor de fundo (vermelho, por exemplo) */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-button:hover {
- background-color: #0056b3;
+.cabecalho nav button:hover {
+  background-color: #c82333; /* Cor mais escura ao passar o mouse */
 }
 
+.cabecalho a {
+  color: white;
+  text-decoration: none;
+  margin: 0 0.5rem; 
+  font-weight: bold; /* Adiciona destaque aos links */
+}
+
+/* Estilos para o rodapé */
+.rodape {
+  background-color: #333;
+  color: white;
+  padding: 0.5rem; /* Diminui o espaçamento interno */
+  text-align: center;
+  position: fixed;
+  padding-top: 0px  ;
+  bottom: 0;
+  height: 2rem;
+  width: 100%;
+}
+
+/* Estilos para o container principal */
+.container {
+  width: 80%;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px; /* Aumenta o raio das bordas */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+}
+
+/* Estilos para os tópicos */
+.topico {
+  border-bottom: 1px solid #ddd;
+  padding: 1.5rem 0; /* Aumenta o espaçamento interno */
+  transition: background-color 0.3s; /* Adiciona uma transição suave */
+}
+
+.topico:hover {
+  background-color: #f9f9f9; /* Efeito de destaque ao passar o mouse */
+}
+
+.topico h2 {
+  margin-bottom: 0.5rem;
+}
+
+.topico a {
+  color: #007bff; /* Cor azul para links */
+  text-decoration: none; 
+}
+
+.topico a:hover {
+  text-decoration: underline;
+}
+
+.container a button {
+  background-color: #28a745; /* Cor de fundo verde */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 1rem; /* Adiciona uma margem superior */
+}
+
+.container a button:hover {
+  background-color: #218838; /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilos para os comentários e respostas */
+.comentario,
+.resposta {
+  margin-top: 1rem;
+  padding: 1rem; /* Aumenta o espaçamento interno */
+  background-color: #f0f0f5; /* Cor de fundo mais clara */
+  border-radius: 8px; /* Aumenta o raio das bordas */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra mais sutil */
+}
+
+.resposta {
+  margin-left: 2rem; 
+  border-left: 2px solid #ddd; 
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+/* Estilos para formulários */
+form {
+  margin-top: 1rem;
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold; /* Adiciona destaque aos labels */
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+form button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 0.8rem 1.5rem; /* Aumenta o espaçamento interno */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold; /* Adiciona destaque ao texto */
+}
+
+form button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para botões de curtir */
 .like-button {
- background-color: #ffffff;
- color: #ffffff;
- border: none;
- border-radius: 5px;
- cursor: pointer;
- font-weight: bold; 
- transition: background-color 0.3s ease;
+  background-color: #007bff; /* Cor de fundo azul */
+  color: white; /* Cor do texto branca */
+  border: none;
+  padding: 0.5rem 1rem; /* Adiciona espaçamento interno */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem; /* Ajusta o tamanho da fonte */
 }
 
 .like-button:hover {
- background-color: #003c80;
+  background-color: #0056b3; /* Cor mais escura ao passar o mouse */
 }
 
+.like-button.liked {
+  background-color: #dc3545; /* Cor vermelha quando curtido */
+  color: white;
+}
+
+/* Estilos para a mensagem de "caracteres restantes" */
 .restantes {
- font-size: 12px;
- text-decoration: underline;
+  font-size: 0.8rem;
+  color: #999;
 }
 
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+  }
 
-input, textarea {
- padding: 0.5rem;
- border: 1px solid #ccc;
- border-radius: 5px;
- margin-top: 1rem;
-}
+  .cabecalho nav {
+    flex-direction: column; /* Empilha os links em telas menores */
+    align-items: center;
+  }
 
-
-img {
- max-width: 35%;
- height: auto;
- border-radius: 5px;
+  .cabecalho a {
+    margin: 0.5rem 0; /* Espaçamento entre os links empilhados */
+  }
 }
