@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../AuthContext';
 import { serverTimestamp } from 'firebase/firestore';
 
-function FormularioComentario({ onSubmit, postId }) { // Adiciona postId como prop
+function FormularioComentario({ onSubmit, postId }) {
   const [texto, setTexto] = useState('');
   const { isAuthenticated, user } = useAuth();
 

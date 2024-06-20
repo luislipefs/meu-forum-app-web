@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs, addDoc, doc, updateDoc, arrayUnion, arrayRemove, query, where, orderBy } from 'firebase/firestore';
 import { getDoc } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 import { db, app } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 
@@ -108,8 +109,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const toggleLike = async (postId) => {
-    if (!user) return; // Garante que o usuário está logado antes de curtir/descurtir
-
+    if (!user) return;
     try {
       const postRef = doc(db, 'posts', postId);
       const postSnap = await getDoc(postRef);
@@ -132,8 +132,10 @@ export const AuthProvider = ({ children }) => {
           setLikedPosts([...likedPosts, postId]);
         }
 
-        // Atualiza o estado local dos posts (opcional, para atualizar a interface imediatamente)
-        fetchPosts(); // Atualiza a lista de posts após curtir/descurtir
+        // Atualiza o estado local dos posts
+        setPosts(prevPosts => prevPosts.map(post =>
+          post.id === postId ? { ...post, likes: postData.likes + (usuarioCurtiu ? -1 : 1), likedBy: usuarioCurtiu ? postData.likedBy.filter(uid => uid !== user.uid) : [...postData.likedBy, user.uid] } : post
+        ));
       }
     } catch (error) {
       console.error("Erro ao curtir/descurtir post:", error);

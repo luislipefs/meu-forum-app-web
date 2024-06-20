@@ -9,10 +9,11 @@ function FormularioTopico() {
   const [conteudo, setConteudo] = useState('');
   const { isAuthenticated, user, addPost } = useAuth();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (titulo.trim() !== '' && conteudo.trim() !== '') {
+    if (titulo.trim() !== '' && conteudo.trim() !== '' && isAuthenticated && user) {
       try {
         await addPost({
           title: titulo,
@@ -20,14 +21,15 @@ function FormularioTopico() {
           createdAt: serverTimestamp(),
           likes: 0,
           likedBy: [],
-          author: user.uid, // ID do usuário no Firebase
-          authorName: user.displayName || user.email, // Nome para exibição
+          author: user.uid,
+          authorName: user.displayName || user.email,
         });
         setTitulo('');
         setConteudo('');
         navigate('/');
       } catch (error) {
         console.error("Erro ao criar tópico:", error);
+        setErrorMessage(error.message);
       }
     }
   };
@@ -64,6 +66,7 @@ function FormularioTopico() {
           <span className="restantes">Caracteres restantes: {300 - conteudo.length}</span>
         </div>
         <button type="submit">Criar Tópico</button>
+        {errorMessage && <p className="error">{errorMessage}</p>}
       </form>
     </div>
   );

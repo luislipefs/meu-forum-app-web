@@ -1,36 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 
-function Topico({ topico }) {
-  const { user, toggleLike, likedPosts, isAuthenticated } = useAuth();
-  const isLiked = likedPosts.includes(topico.id);
+  function Topico({ topico }) { // Remove setTopico como prop
+    const { user, toggleLike, likedPosts, isAuthenticated } = useAuth();
+    const isLiked = likedPosts.includes(topico.id);
 
-  const handleLike = async () => {
-    try {
-      const postRef = doc(db, 'posts', topico.id);
+    const handleLike = async () => {
+      console.log('ID do post antes de toggleLike:', topico.id); 
+      console.log('isLiked antes de toggleLike:', isLiked);
 
-      if (isLiked) {
-        // Descurtir
-        await updateDoc(postRef, {
-          likes: topico.likes - 1,
-          likedBy: arrayRemove(user.uid)
-        });
-      } else {
-        // Curtir
-        await updateDoc(postRef, {
-          likes: topico.likes + 1,
-          likedBy: arrayUnion(user.uid)
-        });
-      }
-      console.log(topico.id)
-      toggleLike(topico.id);
-    } catch (error) {
-      console.error("Erro ao curtir/descurtir post:", error);
-    }
-  };
+      toggleLike(topico.id); // Chama a função toggleLike do contexto
+
+      console.log('ID do post depois de toggleLike:', topico.id); 
+      console.log('isLiked depois de toggleLike:', !isLiked); 
+    };
 
   return (
     <div className="topico">
@@ -47,7 +33,7 @@ function Topico({ topico }) {
           onClick={handleLike}
           disabled={!user} // Desabilita o botão se o usuário não estiver logado
         >
-          {isLiked ? 'Descurtir' : 'Curtir'}
+          {isLiked ? 'Descurtir' : 'Curtir'} {topico.likes}
         </button>
       )}
     </div>

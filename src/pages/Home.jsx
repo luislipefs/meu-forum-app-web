@@ -1,16 +1,22 @@
-import React, { useEffect, useContext } from 'react';
-import { AuthContext } from '../AuthContext'; // Importe o contexto
+import React, { useEffect, useContext, useState } from 'react';
+import { AuthContext } from '../AuthContext';
 import Topico from '../components/Topico';
 import Login from '../components/Login';
 import { Link } from 'react-router-dom';
 
 function Home() {
   const { isAuthenticated, posts, fetchPosts, logout } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true); // Estado para controlar o carregamento
 
   useEffect(() => {
-    if (fetchPosts) {
-      fetchPosts(); // Chame fetchPosts apenas se estiver definida
-    }
+    const fetchData = async () => { // Função assíncrona para buscar os posts
+      if (fetchPosts) {
+        await fetchPosts(); 
+      }
+      setIsLoading(false); // Define isLoading como false após a busca
+    };
+
+    fetchData(); // Chama a função fetchData
   }, [fetchPosts]);
 
   return (
@@ -21,16 +27,20 @@ function Home() {
         <Login /> 
       ) : (
         <>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> {/* Centraliza o botão e o logout */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Link to="/criar-topico">
               <button>Criar Novo Tópico</button>
             </Link>
-            <button onClick={logout}>Logout</button> {/* Move o botão Logout para perto do botão "Criar Novo Tópico" */}
+            <button onClick={logout}>Logout</button>
           </div>
 
-          {posts.map(post => (
-            <Topico key={post.id} topico={post} />
-          ))}
+          {isLoading ? ( // Exibe "Carregando..." enquanto os dados são buscados
+            <p>Carregando posts...</p>
+          ) : (
+            posts.map(post => (
+              <Topico key={post.id} topico={post} />
+            ))
+          )}
         </>
       )}
     </div>

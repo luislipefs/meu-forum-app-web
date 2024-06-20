@@ -1,28 +1,28 @@
-  import React, { useState } from 'react';
-  import { useAuth } from '../AuthContext';
-  import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-  import { db } from '../../firebaseConfig';
+import React, { useState } from 'react';
+import { useAuth } from '../AuthContext';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
 
-  function FormularioResposta({ onSubmit, commentId, postId }) {
+function FormularioResposta({ onSubmit, commentId, postId }) {
     const [texto, setTexto] = useState('');
     const { isAuthenticated, user } = useAuth();
 
     const handleSubmit = async (event) => {
       event.preventDefault();
       if (texto.trim() !== '' && isAuthenticated && user) {
-        try {
-          const respostaData = {
-            postId,
-            commentId,
-            content: texto,
-            author: user.uid,
-            authorName: user.displayName || user.email, 
-            createdAt: serverTimestamp(),
-            likes: 0,
-            likedBy: []
-          };
+          try {
+            const respostaData = {
+              commentId, // ID do comentário pai
+              content: texto,
+              author: user.uid,
+              authorName: user.displayName || user.email,
+              createdAt: serverTimestamp(),
+              likes: 0,
+              likedBy: []
+            };
 
-          await addDoc(collection(db, "respostas"), respostaData);
+            // Adiciona a resposta à subcoleção "respostas" do post
+            await addDoc(collection(db, "posts", postId, "respostas"), respostaData);
 
           setTexto(''); 
           onSubmit(respostaData); 
