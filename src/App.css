@@ -1,87 +1,121 @@
-/* Estilos gerais para o corpo da aplicação */
 body {
-  font-family: sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #CABA9C; /* Cor de fundo mais clara */
   color: #333;
 }
 
 /* Estilos para o cabeçalho */
 .cabecalho {
-  background-color: #333;
+  background-color: #311E0F; /* Cor de fundo verde */
   color: white;
   padding: 1rem;
-  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.cabecalho h1 {
+  margin: 0;
+  font-size: 1.8rem; /* Aumenta o tamanho da fonte */
 }
 
 .cabecalho nav {
   display: flex;
-  justify-content: space-around; 
+  justify-content: space-around;
+  margin-top: 1rem;
 }
 
-.cabecalho nav button { /* Estiliza o botão dentro do nav do cabeçalho */
-  background-color: #dc3545; /* Cor de fundo (vermelho, por exemplo) */
+.cabecalho a, 
+.cabecalho button {
+  color: white;
+  text-decoration: none;
+  padding: 0.7rem 1.2rem; /* Aumenta o padding */
+  border-radius: 8px; /* Bordas mais arredondadas */
+  transition: background-color 0.3s ease; /* Transição suave */
+}
+
+.cabecalho a:hover,
+.cabecalho button:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Efeito hover sutil */
+}
+
+.cabecalho button:hover { /* Efeito hover para botões */
+  background-color: #555;
+}
+
+.cabecalho .botao-logout {
+  background-color: #760F13; /* Cor de fundo vermelha (opcional) */
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem; /* Ajuste o padding conforme necessário */
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
 }
 
-.cabecalho nav button:hover {
+.cabecalho .botao-logout:hover {
   background-color: #c82333; /* Cor mais escura ao passar o mouse */
-}
-
-.cabecalho a {
-  color: white;
-  text-decoration: none;
-  margin: 0 0.5rem; 
-  font-weight: bold; /* Adiciona destaque aos links */
 }
 
 /* Estilos para o rodapé */
 .rodape {
-  background-color: #333;
+  background-color: #311E0F; /* Cor de fundo verde */
   color: white;
-  padding: 0.5rem; /* Diminui o espaçamento interno */
   text-align: center;
   position: fixed;
-  padding-top: 0px  ;
   bottom: 0;
-  height: 2rem;
   width: 100%;
+  height: 4%;
+  font-size: 0.9rem; /* Diminui o tamanho da fonte */
+}
+
+.rodape p {
+  position: center;
 }
 
 /* Estilos para o container principal */
 .container {
   width: 80%;
-  max-width: 960px;
+  max-width: 960px; 
   margin: 2rem auto;
   padding: 1rem;
   background-color: white;
-  border-radius: 8px; /* Aumenta o raio das bordas */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+botao-criar-topico[type="submit"]{
+  background-color: #755553; 
+  color: white;
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;  
 }
 
 /* Estilos para os tópicos */
 .topico {
+  font-size: 1.1rem;
   border-bottom: 1px solid #ddd;
-  padding: 1.5rem 0; /* Aumenta o espaçamento interno */
-  transition: background-color 0.3s; /* Adiciona uma transição suave */
+  padding: 0rem 0rem 0.5rem; 
+  margin-top: 0rem;
+  transition: background-color 0.3s;
 }
 
 .topico:hover {
-  background-color: #f9f9f9; /* Efeito de destaque ao passar o mouse */
+  background-color: #f9f9f9; 
 }
 
 .topico h2 {
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 0.7rem;
+  color: #BB7C23; /* Cor azul para títulos de tópicos */
 }
 
 .topico a {
-  color: #007bff; /* Cor azul para links */
+  color: #BB7C23;
   text-decoration: none; 
 }
 
@@ -89,40 +123,19 @@ body {
   text-decoration: underline;
 }
 
-.container a button {
-  background-color: #28a745; /* Cor de fundo verde */
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  margin-top: 1rem; /* Adiciona uma margem superior */
-}
-
-.container a button:hover {
-  background-color: #218838; /* Cor mais escura ao passar o mouse */
-}
-
 /* Estilos para os comentários e respostas */
 .comentario,
 .resposta {
   margin-top: 1rem;
-  padding: 1rem; /* Aumenta o espaçamento interno */
-  background-color: #f0f0f5; /* Cor de fundo mais clara */
-  border-radius: 8px; /* Aumenta o raio das bordas */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra mais sutil */
+  padding: 1rem;
+  background-color: #f0f0f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .resposta {
-  margin-left: 2rem; 
-  border-left: 2px solid #ddd; 
-}
-
-.error {
-  color: red;
-  font-weight: bold;
-  margin-top: 1rem;
+  margin-left: 2rem;
+  border-left: 2px solid #ddd;
 }
 
 /* Estilos para formulários */
@@ -133,7 +146,8 @@ form {
 form label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: bold; /* Adiciona destaque aos labels */
+  margin-top: 0.5rem;
+  font-weight: bold;
 }
 
 form input[type="text"],
@@ -142,43 +156,123 @@ form input[type="email"],
 form textarea {
   width: 100%;
   padding: 0.8rem;
-  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 0.2rem;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-sizing: border-box;
 }
 
 form button[type="submit"] {
-  background-color: #007bff;
+  background-color: #4C6444; 
   color: white;
-  padding: 0.8rem 1.5rem; /* Aumenta o espaçamento interno */
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-weight: bold; /* Adiciona destaque ao texto */
+  font-weight: bold;
 }
 
 form button[type="submit"]:hover {
-  background-color: #0056b3;
+  background-color: #218838;
+}
+
+.botao-criar-topico {
+  background-color: #DDA827; /* Cor verde (opcional) */
+  color: white;
+  border: none;
+  padding: 1rem 2rem; /* Ajuste o padding conforme necessário */
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1.2rem;/* Remove o sublinhado do link */
+}
+
+.botao-criar-topico:hover {
+  background-color: #cc9200; /* Cor mais escura ao passar o mouse */
+}
+
+/* Estilos para o botão "Escolher arquivo" */
+.formulario-perfil input[type="file"]::file-selector-button {
+  background-color: #4C6444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.formulario-perfil input[type="file"]::file-selector-button:hover {
+  background-color: #218838;
+}
+
+/* Estilos para os botões "Cancelar" e "Voltar" */
+.botao-cancelar{
+  background-color: #6c757d; 
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem; 
+  margin-left: 1rem;
+}
+
+.botao-cancelar:hover,
+.botao-voltar:hover{
+  background-color: #5a6268; 
+}
+
+.botao-salvar{
+  background-color: #4C6444; /* Cor de fundo verde */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem; 
+}
+
+.botao-salvar:hover,
+.botao-editar-perfil{
+  background-color: #218838; 
+}
+
+.botoes-formulario {
+  display: flex; /* Ordena os botões horizontalmente */
+  justify-content: flex-end; /* Alinha os botões à direita */
+}
+
+.botao-editar-perfil{
+  background-color: #4C6444; /* Cor de fundo verde */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem; 
 }
 
 /* Estilos para botões de curtir */
 .like-button {
-  background-color: #007bff; /* Cor de fundo azul */
-  color: white; /* Cor do texto branca */
+  background-color: #5c8b5b; 
+  color: white; 
   border: none;
-  padding: 0.5rem 1rem; /* Adiciona espaçamento interno */
+  padding: 0.5rem 1.5rem; 
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem; /* Ajusta o tamanho da fonte */
+  font-size: 1rem; 
 }
 
 .like-button:hover {
-  background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+  background-color: #4abf67; 
 }
 
 .like-button.liked {
-  background-color: #dc3545; /* Cor vermelha quando curtido */
+  background-color: #760F13; 
   color: white;
 }
 

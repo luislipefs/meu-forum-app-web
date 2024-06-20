@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signOut} from 'firebase/auth';
 import { collection, getDocs, addDoc, doc, updateDoc, arrayUnion, arrayRemove, query, where, orderBy } from 'firebase/firestore';
 import { getDoc } from 'firebase/firestore';
 import { serverTimestamp } from 'firebase/firestore';
 import { db, app } from '../firebaseConfig';
-import { signOut } from 'firebase/auth';
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -14,14 +13,26 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [likedPosts, setLikedPosts] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setIsAuthenticated(true);
         setUser(user);
         fetchLikedPosts(user.uid);
         fetchPosts();
+
+        // Buscar informações do usuário no Firestore
+        try {
+          const userDocRef = doc(db, 'users', user.uid);
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            setUserInfo(userDocSnap.data()); // Atualiza o estado userInfo
+          }
+        } catch (error) {
+          console.error("Erro ao buscar dados do usuário:", error);
+        }
       } else {
         setIsAuthenticated(false);
         setUser(null);
@@ -31,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [isAuthenticated]);
 
 
   const fetchLikedPosts = async (uid) => {
@@ -49,7 +60,8 @@ export const AuthProvider = ({ children }) => {
   const fetchPosts = async () => {
     try {
       const postsCollectionRef = collection(db, 'posts');
-      const querySnapshot = await getDocs(postsCollectionRef);
+      const q = query(postsCollectionRef, orderBy('createdAt', 'desc')); // Ordena por createdAt decrescente
+      const querySnapshot = await getDocs(q);
       const postsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setPosts(postsData);
     } catch (error) {
@@ -218,7 +230,8 @@ return (
       addResposta,
       posts,
       setPosts,
-      addPost
+      addPost,
+      userInfo
     }}
   >
     {children}

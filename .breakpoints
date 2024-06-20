@@ -1,0 +1,20 @@
+{
+  "files": {
+    "src/components/Cabecalho.jsx": [
+      {
+        "id": "60f798a8-40b8-4c96-a841-2ddd13bc8242",
+        "line": 9,
+        "version": 18,
+        "index": 201
+      }
+    ],
+    "src/pages/DetalhesTopico.jsx": [
+      {
+        "id": "82f47941-39a6-4435-999f-c001592abc4a",
+        "line": 7,
+        "version": 83,
+        "index": 335
+      }
+    ]
+  }
+}

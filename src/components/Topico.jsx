@@ -4,9 +4,20 @@ import { useAuth } from '../AuthContext';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 
-  function Topico({ topico }) { // Remove setTopico como prop
+  function Topico({ topico, isPerfilPage = false  }) { 
     const { user, toggleLike, likedPosts, isAuthenticated } = useAuth();
     const isLiked = likedPosts.includes(topico.id);
+
+    const dataCriacao = topico.createdAt?.toDate(); // Converte Timestamp para Date
+    const dataFormatada = dataCriacao
+      ? dataCriacao.toLocaleString('pt-BR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+        })
+      : 'Data não disponível';
 
     const handleLike = async () => {
       console.log('ID do post antes de toggleLike:', topico.id); 
@@ -25,9 +36,9 @@ import { db } from '../../firebaseConfig';
       </Link>
       <p>{topico.content}</p> {/* Exibe o conteúdo do tópico */}
       <p>
-        Likes: {topico.likes} | Por: {topico.authorName || 'Usuário Anônimo'}
+        Curtidas: {topico.likes} | Por: {topico.authorName || 'Usuário Anônimo'} | Criado em: {dataFormatada}
       </p>
-      {isAuthenticated && (
+      {!isPerfilPage && isAuthenticated && ( // Exibe o botão apenas se não for a página de perfil e o usuário estiver autenticado
         <button
           className={`like-button ${isLiked ? 'liked' : ''}`}
           onClick={handleLike}

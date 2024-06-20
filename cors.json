@@ -1,0 +1,7 @@
+[
+  {
+    "origin": ["*"], // Permite qualquer origem (para desenvolvimento)
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD"], // Métodos permitidos
+    "maxAgeSeconds": 3600 // Tempo de cache para as regras
+  }
+]

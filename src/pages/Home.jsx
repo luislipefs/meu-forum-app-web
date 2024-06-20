@@ -21,17 +21,14 @@ function Home() {
 
   return (
     <div className="container" style={{ marginBottom: '50px' }}>
-      <h1>Fórum Gamificado</h1>
-
       {!isAuthenticated ? (
         <Login /> 
       ) : (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Link to="/criar-topico">
-              <button>Criar Novo Tópico</button>
+              <button className="botao-criar-topico">Criar Novo Tópico</button>
             </Link>
-            <button onClick={logout}>Logout</button>
           </div>
 
           {isLoading ? ( // Exibe "Carregando..." enquanto os dados são buscados
