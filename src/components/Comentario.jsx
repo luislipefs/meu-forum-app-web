@@ -1,11 +1,11 @@
 import React from 'react';
 import { useAuth } from '../AuthContext';
-import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'; // Importações do Firestore
+import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 
 function Comentario({ comentario }) {
   const { user, toggleLike } = useAuth();
-  const isLiked = comentario.likedBy && comentario.likedBy.includes(user?.uid); // Verifica se o usuário curtiu o comentário
+  const isLiked = comentario.likedBy && comentario.likedBy.includes(user?.uid); 
 
   const handleLike = async () => {
     try {

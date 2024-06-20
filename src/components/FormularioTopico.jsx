@@ -28,7 +28,6 @@ function FormularioTopico() {
         navigate('/');
       } catch (error) {
         console.error("Erro ao criar tópico:", error);
-        // Lógica para lidar com o erro (ex: exibir mensagem de erro)
       }
     }
   };
